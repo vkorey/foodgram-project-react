@@ -51,12 +51,12 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         current_user = self.request.user
-        following = get_object_or_404(User, id=self.kwargs["user_id"])
+        following = get_object_or_404(User, id=self.kwargs['user_id'])
         return serializer.save(user=current_user, following=following)
 
     @action(
         detail=False,
-        methods=["DELETE"],
+        methods=['DELETE'],
     )
     def delete(self, request, user_id=None):
         current_user = request.user
@@ -77,12 +77,12 @@ class FavoriteViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         current_user = self.request.user
-        recipe = get_object_or_404(Recipe, id=self.kwargs["recipe_id"])
+        recipe = get_object_or_404(Recipe, id=self.kwargs['recipe_id'])
         return serializer.save(user=current_user, favorite_recipe=recipe)
 
     @action(
         detail=False,
-        methods=["DELETE"],
+        methods=['DELETE'],
     )
     def delete(self, request, recipe_id=None):
         current_user = request.user
@@ -115,12 +115,12 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         current_user = self.request.user
-        recipe = get_object_or_404(Recipe, id=self.kwargs["recipe_id"])
+        recipe = get_object_or_404(Recipe, id=self.kwargs['recipe_id'])
         return serializer.save(user=current_user, recipe_in_cart=recipe)
 
     @action(
         detail=False,
-        methods=["DELETE"],
+        methods=['DELETE'],
     )
     def delete(self, request, recipe_id=None):
         current_user = request.user
@@ -132,7 +132,7 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(["GET"])
+@api_view(['GET'])
 def get_list(request):
     user = request.user
     cart = user.in_cart.all()
@@ -147,7 +147,7 @@ def get_list(request):
             else:
                 result[ingredient_in_cart_name] = amount_in_cart
     ingredients_list = str(result)
-    ingredients_list_bytes = io.BytesIO(ingredients_list.encode("utf-8"))
+    ingredients_list_bytes = io.BytesIO(ingredients_list.encode('utf-8'))
     return FileResponse(
-        ingredients_list_bytes, as_attachment=True, filename="list.txt"
+        ingredients_list_bytes, as_attachment=True, filename='list.txt'
     )

@@ -104,7 +104,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             if ingredient['amount'] <= 0:
                 raise serializers.ValidationError(
-                    'Количество ингредиентов должно быть больше 0'
+                    'Количество ингредиентов должно быть  больше 0'
                 )
             IngredientRecipe.objects.create(
                 ingredient=ingredient['id'],
