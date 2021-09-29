@@ -136,3 +136,4 @@ setup.cfg
 .jsbeautifyrc
 backend/api/migrations/
 backend/users/migrations/
+.DS_Store
