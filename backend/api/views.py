@@ -8,11 +8,11 @@ from rest_framework.response import Response
 from .paginator import ResultsSetPagination
 
 from .filters import IngredientsFilter, RecipeFilter
-from .models import (Ingredient, RecipeIngredients, Tag,
-                     Recipe, Favorite, ShoppingList)
+from .models import (Ingredient, IngredientRecipe, Tag,
+                     Recipe, Favorite, ShoppingCart)
 from .serializers import (IngredientsSerializer, TagsSerializer,
                           ShowRecipeFullSerializer, AddRecipeSerializer,
-                          FavouriteSerializer, ShoppingListSerializer)
+                          FavouriteSerializer, ShoppingCartSerializer)
 from .permissions import IsAuthorOrAdmin
 
 
@@ -72,7 +72,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=True, permission_classes=[IsAuthorOrAdmin])
     def shopping_cart(self, request, pk):
         data = {'user': request.user.id, 'recipe': pk}
-        serializer = ShoppingListSerializer(data=data,
+        serializer = ShoppingCartSerializer(data=data,
                                             context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -82,22 +82,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def delete_shopping_cart(self, request, pk):
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
-        shopping_list = get_object_or_404(ShoppingList,
+        shopping_cart = get_object_or_404(ShoppingCart,
                                           user=user, recipe=recipe)
-        shopping_list.delete()
+        shopping_cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, permission_classes=[permissions.IsAuthenticated])
     def download_shopping_cart(self, request):
-        user_shopping_list = request.user.shopping_list.all()
-        to_buy = get_ingredients_list(user_shopping_list)
+        user_shopping_cart = request.user.shopping_cart.all()
+        to_buy = get_ingredients_list(user_shopping_cart)
         return download_file_response(to_buy, 'to_buy.txt')
 
 
 def get_ingredients_list(recipes_list):
     ingredients_dict = {}
     for recipe in recipes_list:
-        ingredients = RecipeIngredients.objects.filter(recipe=recipe.recipe)
+        ingredients = IngredientRecipe.objects.filter(recipe=recipe.recipe)
         for ingredient in ingredients:
             amount = ingredient.amount
             name = ingredient.ingredient.name
