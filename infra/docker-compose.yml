@@ -9,8 +9,7 @@ services:
     restart: always
 
   backend:
-    image: vkorey/foodgram:2.0
-
+    image: vkorey/foodgram:latest
     restart: always
     volumes:
       - static_value:/code/static/
