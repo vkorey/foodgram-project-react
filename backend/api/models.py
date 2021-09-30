@@ -162,7 +162,7 @@ class ShoppingCart(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=['user', 'recipe'],
-                       name='unique_recipe_in_user_shopping_list')]
+                       name='unique_recipe_in_user_shopping_cart')]
         ordering = ('-id',)
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
