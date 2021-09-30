@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-from django.core.validators import MinValueValidator
 
 User = get_user_model()
 
@@ -55,8 +55,8 @@ class Recipe(models.Model):
         verbose_name='Название рецепта',
     )
     image = models.ImageField(
-        null=False, blank=False, 
-        upload_to='recipes/', 
+        null=False, blank=False,
+        upload_to='recipes/',
         verbose_name='Изображение блюда'
     )
     text = models.TextField(
@@ -161,7 +161,7 @@ class ShoppingCart(models.Model):
     )
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['user', 'recipe'],
+        constraints = [UniqueConstraint(fields=['user', 'recipe'],
                        name='unique_recipe_in_user_shopping_cart')]
         ordering = ('-id',)
         verbose_name = 'Список покупок'

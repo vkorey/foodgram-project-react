@@ -5,8 +5,9 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from users.serializers import CustomUserSerializer
 
-from .models import (Ingredient, Tag, Recipe, IngredientRecipe,
-                     Favorite, ShoppingCart)
+from .models import (
+    Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart, Tag,
+)
 
 User = get_user_model()
 

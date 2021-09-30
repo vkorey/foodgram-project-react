@@ -132,6 +132,7 @@ dmypy.json
 .idea
 
 .vscode/
+.jsonbeautify
 setup.cfg
 .jsbeautifyrc
 backend/api/migrations/
