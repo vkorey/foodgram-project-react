@@ -1,58 +1,47 @@
-from api.models import (
-    Favorite, Follow, Ingredient, IngredientRecipe, Recipe, ShoppingCart, Tag,
-)
 from django.contrib import admin
-
-
-@admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'measurement_unit',
-    )
-    empty_value_display = '-empty-'
-    list_filter = ('name',)
-    
-
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_filter = ('author', 'name', 'tags')
-    list_display = ('name', 'followers')
-
-    @admin.display(empty_value=None)
-    def followers(self, obj):
-        return obj.favorited_by.all().count()
+from .models import (Ingredient, Tag, Recipe, RecipeTags,
+                     IngredientRecipe, Favorite, ShoppingCart)
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'slug',
-    )
-    empty_value_display = '-empty-'
+    list_display = ('pk', 'name', 'slug')
 
 
-@admin.register(IngredientRecipe)
-class IngredientRecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'recipe', 'amount')
-    empty_value_display = '-empty-'
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'measurement_unit')
+    list_filter = ['name']
+    search_fields = ('name',)
 
 
-@admin.register(ShoppingCart)
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe_in_cart')
-    empty_value_display = '-empty-'
+class IngredientRecipeInline(admin.TabularInline):
+    model = IngredientRecipe
+    min_num = 1
+    extra = 1
 
 
-@admin.register(Follow)
-class FollowAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'following')
-    empty_value_display = '-empty-'
+class RecipeTagsInline(admin.TabularInline):
+    model = RecipeTags
+    min_num = 1
+    extra = 0
+
+
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'author', 'in_favorite')
+    list_filter = ['name', 'author', 'tags']
+    inlines = (IngredientRecipeInline, RecipeTagsInline)
+
+    def in_favorite(self, obj):
+        return obj.in_favorite.all().count()
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'favorite_recipe')
-    empty_value_display = '-empty-'
+    list_display = ('pk', 'user', 'recipe')
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'recipe')

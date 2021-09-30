@@ -1,84 +1,35 @@
-from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, PermissionsMixin,
-)
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class UserManager(BaseUserManager):
-    def create_user(self, email, username, password, **kwargs):
-        if not email:
-            raise ValueError('Users must have an email address')
-        if not username:
-            raise ValueError('Users must have an username')
+class User(AbstractUser):
+    email = models.EmailField(max_length=150, unique=True,
+                              verbose_name='Почта')
+    username = models.CharField(blank=False, max_length=150, unique=True,
+                                verbose_name='Имя пользователя')
+    first_name = models.CharField(blank=False, max_length=150,
+                                  verbose_name='Имя')
+    last_name = models.CharField(blank=False, max_length=150,
+                                 verbose_name='Фамилия')
 
-        user = self.model(
-            email=self.normalize_email(email), username=username, **kwargs
-        )
-        user.set_password(password)
-        user.save()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
-        return user
-
-    def create_superuser(self, email, username, password=None, **kwargs):
-        user = self.create_user(
-            email,
-            username=username,
-            password=password,
-            is_superuser=True,
-            is_staff=True,
-            role=User.ADMIN,
-            **kwargs,
-        )
-        return user
+    def __str__(self):
+        return self.email
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    USER = 'user'
-    ADMIN = 'admin'
-
-    ROLES_CHOICES = [
-        (USER, 'user'),
-        (ADMIN, 'admin'),
-    ]
-
-    first_name = models.CharField(
-        verbose_name='first name', max_length=30, blank=True
-    )
-    last_name = models.CharField(
-        verbose_name='last name', max_length=150, blank=True
-    )
-    username = models.CharField(
-        verbose_name='username', max_length=30, unique=True
-    )
-    email = models.EmailField(
-        verbose_name='email address', max_length=255, unique=True
-    )
-
-    role = models.CharField(
-        max_length=20,
-        choices=ROLES_CHOICES,
-        default=USER,
-    )
-    is_staff = models.BooleanField(
-        'staff status',
-        default=False,
-        help_text=(
-            'Mожет ли пользователь войти на '
-            'этот сайт в качестве администратора'
-        ),
-    )
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='follower',
+                             verbose_name='Пользователь-подписчик')
+    following = models.ForeignKey(User, on_delete=models.CASCADE,
+                                  related_name='following',
+                                  verbose_name='Пользователь'
+                                               ' (на кого подписаны)')
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ['-id']
-
-    @property
-    def is_user_admin(self):
-        return self.role == User.ADMIN
+        constraints = [models.UniqueConstraint(fields=['user', 'following'],
+                       name='unique_following')]
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
