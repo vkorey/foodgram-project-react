@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F
+
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from users.serializers import CustomUserSerializer
 
-from .models import (
-    Favorite, Ingredient, IngredientRecipe, Recipe, ShoppingCart, Tag,
-)
+from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                     ShoppingCart, Tag)
 
 User = get_user_model()
 
@@ -96,7 +96,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, data):
         ingredients = self.initial_data.get('ingredients')
-        if ingredients == []:
+        if not ingredients:
             raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
@@ -113,8 +113,8 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
             amount = ingredient['amount']
-            if IngredientRecipe.objects.\
-               filter(recipe=recipe, ingredient=ingredient_id).exists():
+            if (IngredientRecipe.objects.
+               filter(recipe=recipe, ingredient=ingredient_id).exists()):
                 amount += F('amount')
             IngredientRecipe.objects.update_or_create(
                 recipe=recipe, ingredient=ingredient_id,
