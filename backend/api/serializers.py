@@ -101,6 +101,12 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
                 raise ValidationError('Количество должно быть положительным!')
+        ingredients_count = len(ingredients)
+        ingredients_set = len(
+            set([i['id'] for i in ingredients])
+        )
+        if ingredients_count > ingredients_set:
+            raise ValidationError('Ингредиенты не должны повторяться')
         return data
 
     def validate_cooking_time(self, data):
