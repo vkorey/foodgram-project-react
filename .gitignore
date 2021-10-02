@@ -135,7 +135,5 @@ dmypy.json
 .jsonbeautify
 setup.cfg
 .jsbeautifyrc
-backend/api/migrations/
-backend/users/migrations/
 .DS_Store
 .DS_Store
