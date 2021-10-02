@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse
 
-from models import IngredientRecipe
+from .models import IngredientRecipe
 
 
 def get_ingredients_list(recipes_list):
