@@ -95,6 +95,12 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                   'image', 'text', 'cooking_time')
 
     def validate_ingredients(self, data):
+        ingredients_cnt = len(data)
+        ingredients_set = len(set([i['ingredient']['id'] for i in data]))
+        if ingredients_cnt > ingredients_set:
+            raise serializers.ValidationError(
+                {'errors': 'Ингредиенты не должны повторяться'}
+            )
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
