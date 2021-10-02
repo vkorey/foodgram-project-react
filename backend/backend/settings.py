@@ -9,7 +9,7 @@ environ.Env.read_env(env.str(BASE_DIR, './.env'))
 
 SECRET_KEY = env.str('SECRET_KEY', default='ag)dk=-5*_pbk2s+#553r&=-gj!!(2$vyvai*or$b8qf+%3d1v')  # noqa: E501
 
-DEBUG = env.bool(True)
+DEBUG = True
 
 #  DEBUG = env.bool('DEBUG', default=False)
 
