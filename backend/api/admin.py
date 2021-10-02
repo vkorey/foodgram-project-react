@@ -22,7 +22,7 @@ class IngredientRecipeInline(admin.TabularInline):
     extra = 1
 
 
-class RecipeTagsInline(admin.TabularInline):
+class RecipeTagInline(admin.TabularInline):
     model = RecipeTag
     min_num = 1
     extra = 0
@@ -32,7 +32,7 @@ class RecipeTagsInline(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'author', 'favorited_by')
     list_filter = ['name', 'author', 'tags']
-    inlines = (IngredientRecipeInline, RecipeTagsInline)
+    inlines = (IngredientRecipeInline, RecipeTagInline)
 
     def favorited_by(self, obj):
         return obj.favorited_by.all().count()
