@@ -96,7 +96,9 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, data):
         ingredients_cnt = len(data)
-        ingredients_set = len(set([i['ingredient']['id'] for i in data]))
+        ingredients_set = len(
+            set([i['ingredient']['ingredient_id'] for i in data])
+        )
         if ingredients_cnt > ingredients_set:
             raise serializers.ValidationError(
                 {'errors': 'Ингредиенты не должны повторяться'}
