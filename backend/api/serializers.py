@@ -100,9 +100,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             set([i['id'] for i in data['ingredients']])
         )
         if ingredients_cnt > ingredients_set:
-            raise serializers.ValidationError(
-                {'errors': 'Ингредиенты не должны повторяться'}
-            )
+            raise ValidationError('Ингредиенты не должны повторяться')
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise ValidationError('Нужно выбрать минимум 1 ингридиент!')
