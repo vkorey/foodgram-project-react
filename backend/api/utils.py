@@ -3,10 +3,10 @@ from django.http.response import HttpResponse
 from .models import IngredientRecipe
 
 
-def get_ingredients_list(recipes_list):
+def get_ingredients_list(request):
     ingredients_dict = {}
     ingredients = IngredientRecipe.objects.filter(
-        recipe__shoppingcart__user=recipes_list.user
+        recipe__shoppingcart__user=request.user
     )
     for ingredient in ingredients:
         amount = ingredient.amount
