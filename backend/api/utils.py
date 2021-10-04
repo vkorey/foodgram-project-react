@@ -5,7 +5,7 @@ from .models import IngredientRecipe
 
 def get_ingredients_list(request):
     ingredients_dict = {}
-    ingredients = IngredientRecipe.objects.values_list(
+    ingredients = IngredientRecipe.objects.values(
         'amount',
         'ingredient__name',
         'ingredient__measurement_unit'
