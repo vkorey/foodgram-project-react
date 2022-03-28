@@ -50,9 +50,6 @@ sudo docker-compose exec backend python manage.py createsuperuser
 docker-compose down -v
 ```
 
-## Проект доступен по адресу http://178.154.227.231
-Логин:vk@vk.vk
-Пароль:GhbdtnGjrf
 
 ### Автор
 * **Владимир Корельский** - https://github.com/vkorey
